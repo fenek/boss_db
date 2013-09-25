@@ -310,9 +310,13 @@ build_conditions1([{Key, 'not_equals', Value}|Rest], Acc) when Value == undefine
     build_conditions1(Rest, add_cond(Acc, Key, "is not", pack_value(Value)));
 build_conditions1([{Key, 'not_equals', Value}|Rest], Acc) ->
     build_conditions1(Rest, add_cond(Acc, Key, "!=", pack_value(Value)));
+build_conditions1([{_Key, 'in', []}|Rest], Acc) ->
+    build_conditions1(Rest, add_cond(Acc, "", "FALSE", ""));
 build_conditions1([{Key, 'in', Value}|Rest], Acc) when is_list(Value) ->
     PackedValues = pack_set(Value),
     build_conditions1(Rest, add_cond(Acc, Key, "IN", PackedValues));
+build_conditions1([{_Key, 'not_in', []}|Rest], Acc) ->
+    build_conditions1(Rest, Acc);
 build_conditions1([{Key, 'not_in', Value}|Rest], Acc) when is_list(Value) ->
     PackedValues = pack_set(Value),
     build_conditions1(Rest, add_cond(Acc, Key, "NOT IN", PackedValues));
